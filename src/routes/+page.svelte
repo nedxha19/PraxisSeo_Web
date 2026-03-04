@@ -21,6 +21,6 @@ import background from '$lib/assets/tek.jpg';
 </main>
 
 
-<footer>
+<footer class="h-[300px] bg-blue-950 text-white flex items-center justify-center">
 
 </footer>
