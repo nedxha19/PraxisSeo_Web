@@ -6,6 +6,8 @@ import background from '$lib/assets/tek.jpg';
 <svelte:head>
     <title>Electronic Devices</title>
     <meta name="description" content="A collection of electronic devices and gadgets." />
+    <meta property="og:title" content="Electronic Devices" />
+    <meta property="og:image" content={background} />
 </svelte:head>
 
 
@@ -22,5 +24,5 @@ import background from '$lib/assets/tek.jpg';
 
 
 <footer class="h-[300px] bg-blue-950 text-white flex items-center justify-center">
-
+dgdygfryfu8fhi
 </footer>
