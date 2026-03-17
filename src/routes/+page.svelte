@@ -6,6 +6,7 @@
 	const nameFieldCandidates = ['name', 'title', 'product_name'];
 	const descriptionFieldCandidates = ['description', 'details', 'summary'];
 	const priceFieldCandidates = ['price', 'cost', 'amount'];
+	const slugFieldCandidates = ['slug', 'product_slug'];
 
 	function getFirstByKeys(row, keys) {
 		for (const key of keys) {
@@ -36,6 +37,11 @@
 		if (!Number.isFinite(num)) return String(value);
 		return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(num);
 	}
+
+	function getSlug(row) {
+		const value = getFirstByKeys(row, slugFieldCandidates);
+		return value === null ? null : String(value);
+	}
 </script>
 
 <svelte:head>
@@ -61,33 +67,38 @@
 		<h2 class="mb-3 text-2xl font-bold">Products ({data.products?.length ?? 0})</h2>
 
 		{#if data.products?.length}
-			<div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-				{#each data.products as product, index (product.id ?? product.product_id ?? index)}
-					<article class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
-						{#if getImage(product)}
-							<img
-								src={getImage(product)}
-								alt={getName(product)}
-								class="h-56 w-full bg-gray-100 object-cover"
-								loading="lazy"
-							/>
-						{:else}
-							<div
-								class="flex h-56 w-full items-center justify-center bg-gray-100 text-sm text-gray-500"
-							>
-								No image URL in database
-							</div>
-						{/if}
-						<div class="space-y-2 p-4">
-							<h3 class="text-lg font-semibold">{getName(product)}</h3>
-							<p class="line-clamp-3 text-sm text-gray-600">{getDescription(product)}</p>
-							{#if getPrice(product)}
-								<p class="text-base font-bold text-blue-900">{getPrice(product)}</p>
+			<ul class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+				{#each data.products as product, index (getSlug(product) ?? index)}
+					<li>
+						<a
+							href={`/products/${getSlug(product) ?? index}`}
+							class="block overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition hover:shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+						>
+							{#if getImage(product)}
+								<img
+									src={getImage(product)}
+									alt={getName(product)}
+									class="h-56 w-full bg-gray-100 object-cover"
+									loading="lazy"
+								/>
+							{:else}
+								<div
+									class="flex h-56 w-full items-center justify-center bg-gray-100 text-sm text-gray-500"
+								>
+									No image URL in database
+								</div>
 							{/if}
-						</div>
-					</article>
+							<div class="space-y-2 p-4">
+								<h3 class="text-lg font-semibold">{getName(product)}</h3>
+								<p class="line-clamp-3 text-sm text-gray-600">{getDescription(product)}</p>
+								{#if getPrice(product)}
+									<p class="text-base font-bold text-blue-900">{getPrice(product)}</p>
+								{/if}
+							</div>
+						</a>
+					</li>
 				{/each}
-			</div>
+			</ul>
 		{:else if data.dbConnected}
 			<p>No products found in `products` table.</p>
 		{/if}
