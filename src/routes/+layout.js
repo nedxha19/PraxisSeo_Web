@@ -1,1 +1,2 @@
-export const prerender = true;
+// src/routes/+layout.js
+export const prerender = false;
